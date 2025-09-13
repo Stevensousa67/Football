@@ -11,9 +11,9 @@ interface NavLinkItem {
 }
 
 const navLinks: NavLinkItem[] = [
-    { name: 'Placeholder 1', href: '#' },
-    { name: 'Placeholder 2', href: '#' },
-    { name: 'Placeholder 3', href: '#' },
+    { name: 'Standings', href: '#' },
+    { name: 'Upcoming Games', href: '#' },
+    { name: 'News', href: '#' },
     { name: 'Contact', href: '/#contact-section', isContactLink: true },
 ];
 
