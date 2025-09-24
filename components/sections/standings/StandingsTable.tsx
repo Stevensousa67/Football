@@ -1,14 +1,49 @@
 import Image from 'next/image';
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
+// Define interfaces for the data structure
+interface Stat {
+  name: string;
+  value: string | number;
+}
+
+interface Team {
+  id: string;
+  displayName?: string;
+  name?: string;
+  logos?: { href: string }[];
+}
+
+interface Entry {
+  team: Team;
+  stats?: Stat[];
+}
+
+interface Standings {
+  entries: Entry[];
+}
+
+interface Data {
+  children?: { standings?: Standings }[];
+}
+
 interface StandingsTableProps {
-  data: any; // Replace 'any' with the actual type of your standings data
+  data: Data;
 }
 
 export function StandingsTable({ data }: StandingsTableProps) {
   const entries = data?.children?.[0]?.standings?.entries ?? [];
-  const get = (entry: any, name: string) => entry?.stats?.find((stat: any) => stat.name === name)?.value ?? '-';
-  const sorted = [...entries].sort((a, b) => (get(a, 'rank') as number) - (get(b, 'rank') as number));
+
+  // Memoize the get function to avoid redundant stat lookups
+  const getStat = (entry: Entry, name: string): number => {
+    const value = entry.stats?.find((stat) => stat.name === name)?.value ?? '-';
+    return value === '-' ? 0 : Number(value);
+  };
+
+  // Sort entries once and reuse
+  const sortedEntries = entries.length
+    ? [...entries].sort((a, b) => getStat(a, 'rank') - getStat(b, 'rank'))
+    : [];
 
   return (
     <Table>
@@ -24,23 +59,30 @@ export function StandingsTable({ data }: StandingsTableProps) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {sorted.map((entry: any) => {
-          const teamName = entry.team?.displayName || entry.team?.name || "Unknown";
-          const logo = entry.team?.logos?.[0]?.href;
+        {sortedEntries.map((entry) => {
+          const { team } = entry;
+          const teamName = team.displayName || team.name || 'Unknown';
+          const logo = team.logos?.[0]?.href;
+
           return (
-          <TableRow key={entry.team.id}>
-            <TableCell className="text-left">{get(entry, 'rank')}</TableCell>
-            <TableCell className="text-left"><div className="flex items-center">{logo && (
-              <Image src={logo} alt={teamName} width={22} height={22} className="inline mr-2" />
-            )}{teamName}</div></TableCell>
-            <TableCell className="text-right">{get(entry, 'points')}</TableCell>
-            <TableCell className="text-right">{get(entry, 'gamesPlayed')}</TableCell>
-            <TableCell className="text-right">{get(entry, 'wins')}</TableCell>
-            <TableCell className="text-right">{get(entry, 'ties')}</TableCell>
-            <TableCell className="text-right">{get(entry, 'losses')}</TableCell>
-          </TableRow>
-        );
-      })}
+            <TableRow key={team.id}>
+              <TableCell className="text-left">{getStat(entry, 'rank')}</TableCell>
+              <TableCell className="text-left">
+                <div className="flex items-center">
+                  {logo && (
+                    <Image src={logo} alt={teamName} width={22} height={22} className="inline mr-2"/>
+                  )}
+                  {teamName}
+                </div>
+              </TableCell>
+              <TableCell className="text-right">{getStat(entry, 'points')}</TableCell>
+              <TableCell className="text-right">{getStat(entry, 'gamesPlayed')}</TableCell>
+              <TableCell className="text-right">{getStat(entry, 'wins')}</TableCell>
+              <TableCell className="text-right">{getStat(entry, 'ties')}</TableCell>
+              <TableCell className="text-right">{getStat(entry, 'losses')}</TableCell>
+            </TableRow>
+          );
+        })}
       </TableBody>
       <TableFooter>
         <TableRow>
