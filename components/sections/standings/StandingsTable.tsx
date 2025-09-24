@@ -30,7 +30,7 @@ export function StandingsTable({ data }: StandingsTableProps) {
           return (
           <TableRow key={entry.team.id}>
             <TableCell className="text-left">{get(entry, 'rank')}</TableCell>
-            <TableCell className="text-left"><div className="flex items-center gap-2">{logo && (
+            <TableCell className="text-left"><div className="flex items-center">{logo && (
               <Image src={logo} alt={teamName} width={22} height={22} className="inline mr-2" />
             )}{teamName}</div></TableCell>
             <TableCell className="text-right">{get(entry, 'points')}</TableCell>
