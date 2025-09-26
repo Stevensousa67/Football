@@ -1,4 +1,4 @@
-export async function getStandings(tournament: string) {
+export async function getNews(tournament: string) {
   const res = await fetch(
     `https://site.web.api.espn.com/apis/v2/sports/soccer/${tournament}/news`
   );
