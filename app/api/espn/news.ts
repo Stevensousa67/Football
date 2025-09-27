@@ -1,6 +1,6 @@
 export async function getNews(tournament: string) {
   const res = await fetch(
-    `https://site.web.api.espn.com/apis/v2/sports/soccer/${tournament}/news`
+    `https://site.api.espn.com/apis/site/v2/sports/soccer/${tournament}/news`
   );
 
   if (!res.ok) {
