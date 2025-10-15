@@ -7,6 +7,23 @@ import { authClient } from "@/lib/auth/auth-client"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
+interface ExtendedUser {
+  id: string;
+  email: string;
+  emailVerified: boolean;
+  name: string;
+  createdAt: Date;
+  updatedAt: Date;
+  image?: string | null;
+  isAdmin: boolean;
+  countryCode?: string;
+  phoneNumber?: string;
+  gender?: string;
+  accountStatus: string;
+  preferredLeague?: string;
+  preferredTeam?: string;
+}
+
 export function ProfileToggle() {
   const router = useRouter()
   const { data: session, isPending } = authClient.useSession()
@@ -30,7 +47,7 @@ export function ProfileToggle() {
     )
   }
 
-  console.log(session)
+  const user = session?.user as ExtendedUser | undefined
 
   return (
     <DropdownMenu>
@@ -46,7 +63,7 @@ export function ProfileToggle() {
             <DropdownMenuItem asChild>
               <Link href="/account">Account Settings</Link>
             </DropdownMenuItem>
-            {session.user.isAdmin && (
+            {user?.isAdmin && (
               <DropdownMenuItem asChild>
                 <Link href="/admin">Admin Dashboard</Link>
               </DropdownMenuItem>
