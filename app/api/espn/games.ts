@@ -1,6 +1,6 @@
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
-function formatDate(date: Date): string {
+export function formatDateForAPI(date: Date): string {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
@@ -14,7 +14,7 @@ export async function getGames(tournament: string, daysBack: number = 7, daysFor
   const startDate = new Date(today.getTime() - (daysBack * MS_PER_DAY));
   const endDate = new Date(today.getTime() + (daysForward * MS_PER_DAY));
   
-  const dateRange = `${formatDate(startDate)}-${formatDate(endDate)}`;
+  const dateRange = `${formatDateForAPI(startDate)}-${formatDateForAPI(endDate)}`;
   
   const res = await fetch(
     `https://site.api.espn.com/apis/site/v2/sports/soccer/${tournament}/scoreboard?dates=${dateRange}`
