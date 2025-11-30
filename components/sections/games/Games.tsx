@@ -112,7 +112,7 @@ function parseGames(events: ESPNEvent[]): ParsedGame[] {
   });
 }
 
-function GamesCarousel({ games, title }: { games: ParsedGame[]; title: string }) {
+function GamesCarousel({ games, title, subtitle }: { games: ParsedGame[]; title: string; subtitle?: string }) {
   if (games.length === 0) {
     return (
       <div className="w-full text-center py-8">
@@ -123,7 +123,10 @@ function GamesCarousel({ games, title }: { games: ParsedGame[]; title: string })
 
   return (
     <div className="w-full">
-      <h2 className="text-xl font-semibold mb-4 text-center">{title}</h2>
+      <h2 className={`text-xl font-semibold text-center ${subtitle ? 'mb-1' : 'mb-4'}`}>{title}</h2>
+      {subtitle && (
+        <p className="text-sm text-muted-foreground mb-4 text-center">{subtitle}</p>
+      )}
       
       {/* Grid layout for larger screens */}
       <div className="hidden lg:grid lg:grid-cols-3 gap-6 justify-center items-stretch">
@@ -169,19 +172,34 @@ function GamesCarousel({ games, title }: { games: ParsedGame[]; title: string })
 }
 
 export default async function Games({ tournament }: GamesProps) {
-  const gamesData = await getGames(tournament);
+  // Fetch games from the last 7 days and upcoming 7 days
+  const gamesData = await getGames(tournament, 7, 7);
   const parsedGames = parseGames(gamesData.events || []);
 
-  const upcomingGames = parsedGames.filter((game) => !game.isCompleted);
-  const pastGames = parsedGames.filter((game) => game.isCompleted);
+  // Split into upcoming and past games
+  const upcomingGames = parsedGames
+    .filter((game) => !game.isCompleted)
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()); // Soonest first
+  
+  const pastGames = parsedGames
+    .filter((game) => game.isCompleted)
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()); // Most recent first
 
   return (
     <section className="mt-20 flex flex-col items-center text-center gap-8 px-4">
       <h1 className="text-3xl font-semibold">Games</h1>
       
       <div className="w-full flex flex-col gap-12">
-        <GamesCarousel games={upcomingGames} title="Upcoming Games" />
-        <GamesCarousel games={pastGames} title="Past Games" />
+        <GamesCarousel 
+          games={upcomingGames} 
+          title="Upcoming Games" 
+          subtitle="Next 7 days"
+        />
+        <GamesCarousel 
+          games={pastGames} 
+          title="Past Games" 
+          subtitle="Last 7 days"
+        />
       </div>
     </section>
   );
