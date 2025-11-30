@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { format, subDays, addDays } from "date-fns";
+import { format, addDays } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { DateRange } from "react-day-picker";
 
@@ -66,11 +66,11 @@ export function DateRangePicker({
   );
 }
 
-// Default date range - 7 days back and 7 days forward
+// Default date range - from today to 7 days forward
 export function getDefaultDateRange(): DateRange {
   const today = new Date();
   return {
-    from: subDays(today, 7),
+    from: today,
     to: addDays(today, 7),
   };
 }
