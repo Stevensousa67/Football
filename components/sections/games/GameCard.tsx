@@ -23,6 +23,22 @@ interface GameCardProps {
   className?: string;
 }
 
+function formatGameDate(dateString: string) {
+  const gameDate = new Date(dateString);
+  return gameDate.toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+  });
+}
+
+function formatGameTime(dateString: string) {
+  const gameDate = new Date(dateString);
+  return gameDate.toLocaleTimeString(undefined, {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
 export function GameCard({
   homeTeam,
   awayTeam,
@@ -79,24 +95,25 @@ export function GameCard({
             {/* VS or Score Divider */}
             <div className="flex flex-col items-center gap-1">
               {isCompleted ? (
-                <span className="text-sm text-muted-foreground font-medium">FT</span>
+                <>
+                  <span className="text-sm text-muted-foreground font-medium">FT</span>
+                  {date && (
+                    <span className="text-xs text-muted-foreground text-center">
+                      {formatGameDate(date)}
+                    </span>
+                  )}
+                </>
               ) : (
                 <>
                   <span className="text-sm font-semibold text-muted-foreground">VS</span>
                   {date && (
                     <span className="text-xs text-muted-foreground text-center">
-                      {new Date(date).toLocaleDateString(undefined, {
-                        month: "short",
-                        day: "numeric",
-                      })}
+                      {formatGameDate(date)}
                     </span>
                   )}
                   {date && (
                     <span className="text-xs text-muted-foreground">
-                      {new Date(date).toLocaleTimeString(undefined, {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
+                      {formatGameTime(date)}
                     </span>
                   )}
                 </>
