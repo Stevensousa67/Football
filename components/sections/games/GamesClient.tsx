@@ -51,11 +51,11 @@ function GamesCarousel({ games, title }: { games: ParsedGame[]; title: string })
       <h2 className="text-xl font-semibold text-center mb-4">{title}</h2>
       
       {/* Carousel for all screen sizes - responsive columns */}
-      <div className="w-full max-w-5xl mx-auto px-8">
+      <div className="w-full max-w-5xl mx-auto px-12">
         <Carousel opts={{ align: "start", loop: true }} className="w-full relative">
-          <CarouselPrevious className="absolute -left-4 top-1/2 -translate-y-1/2 z-10" />
-          <CarouselNext className="absolute -right-4 top-1/2 -translate-y-1/2 z-10" />
-          <CarouselContent className="-ml-2 md:-ml-4 pt-2">
+          <CarouselPrevious className="absolute -left-10 top-1/2 -translate-y-1/2 z-10" />
+          <CarouselNext className="absolute -right-10 top-1/2 -translate-y-1/2 z-10" />
+          <CarouselContent className="-ml-2 md:-ml-4">
             {games.map((game) => (
               <CarouselItem key={game.id} className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3">
                 <GameCard

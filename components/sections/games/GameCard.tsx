@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardFooter } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 
 interface Team {
@@ -55,22 +56,15 @@ export function GameCard({
       className="h-full"
     >
       <Card
-        className={`flex h-full p-0 transition-all duration-300 ease-in-out hover:shadow-xl hover:shadow-primary/10 hover:border-primary/30 ${className || ""}`}
+        className={`flex flex-col h-full p-0 transition-all duration-300 ease-in-out hover:shadow-xl hover:shadow-primary/10 hover:border-primary/30 ${className || ""}`}
       >
-        <CardContent className="flex flex-col w-full p-4 gap-4">
-          {/* Status Badge */}
-          <div className="flex justify-center">
-            <span
-              className={`text-xs font-medium px-3 py-1 rounded-full ${
-                isCompleted
-                  ? "bg-muted text-muted-foreground"
-                  : "bg-primary/10 text-primary"
-              }`}
-            >
-              {statusDetail}
-            </span>
-          </div>
+        <CardHeader className="flex items-center justify-center pb-2 pt-4 px-4">
+          <Badge variant={isCompleted ? "secondary" : "default"}>
+            {statusDetail}
+          </Badge>
+        </CardHeader>
 
+        <CardContent className="flex flex-col flex-1 px-4 pb-2 gap-4">
           {/* Teams Container */}
           <div className="flex items-center justify-between gap-4">
             {/* Away Team */}
@@ -139,14 +133,14 @@ export function GameCard({
               )}
             </div>
           </div>
-
-          {/* Venue */}
-          {venue && (
-            <div className="text-center">
-              <span className="text-xs text-muted-foreground">{venue}</span>
-            </div>
-          )}
         </CardContent>
+
+        {/* Venue */}
+        {venue && (
+          <CardFooter className="justify-center pt-0 pb-4 px-4">
+            <span className="text-xs text-muted-foreground text-center">{venue}</span>
+          </CardFooter>
+        )}
       </Card>
     </motion.div>
   );
