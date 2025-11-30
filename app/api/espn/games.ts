@@ -4,7 +4,10 @@ export async function getGames(tournament: string) {
   );
 
   if (!res.ok) {
-    throw new Error("Failed to fetch games data", { cause: res.status });
+    throw new Error(
+      `Failed to fetch games data for tournament "${tournament}" (status: ${res.status})`,
+      { cause: res.status }
+    );
   }
 
   const data = await res.json();

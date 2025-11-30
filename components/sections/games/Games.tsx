@@ -82,12 +82,9 @@ interface ParsedGame {
 function parseGames(events: ESPNEvent[]): ParsedGame[] {
   return events.map((event) => {
     const competition = event.competitions[0];
-    const homeTeamData = competition.competitors.find(
-      (c: ESPNTeam) => c.team && competition.competitors.indexOf(c) === 0
-    );
-    const awayTeamData = competition.competitors.find(
-      (c: ESPNTeam) => c.team && competition.competitors.indexOf(c) === 1
-    );
+    // Use direct indexing instead of find+indexOf for O(1) access
+    const homeTeamData = competition.competitors[0];
+    const awayTeamData = competition.competitors[1];
 
     return {
       id: event.id,
