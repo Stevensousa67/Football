@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <>
       <AnimatedSection animation="fade-in-up" duration="duration-700">
-        <div className="mt-40 ml-2 mr-2 flex flex-col items-center justify-center">
+        <div className="mt-40 flex flex-col items-center justify-center px-4">
           <h1 className="text-4xl font-bold mb-4 text-center">Welcome to the Football App</h1>
           <p className="text-lg text-gray-700 text-center">Your one-stop destination for football stats and updates.</p>
         </div>
