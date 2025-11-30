@@ -3,26 +3,7 @@
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { motion } from "framer-motion";
-
-interface Team {
-  id: string;
-  displayName: string;
-  shortDisplayName: string;
-  abbreviation: string;
-  logo: string;
-  score?: string;
-}
-
-interface GameCardProps {
-  homeTeam: Team;
-  awayTeam: Team;
-  statusDetail: string;
-  venue?: string;
-  date?: string;
-  isCompleted: boolean;
-  className?: string;
-}
+import type { GameCardProps } from "@/lib/utils";
 
 function formatGameDate(dateString: string) {
   const gameDate = new Date(dateString);
@@ -51,25 +32,20 @@ export function GameCard({
 }: GameCardProps) {
   return (
     <div className="h-full p-1">
-      <motion.div
-        whileHover={{ scale: 1.02, y: -2 }}
-        transition={{ type: "spring", stiffness: 300, damping: 20 }}
-        className="h-full"
+      <Card
+        className={`flex flex-col h-full p-0 ${className || ""}`}
       >
-        <Card
-          className={`flex flex-col h-full p-0 transition-all duration-300 ease-in-out hover:shadow-xl hover:shadow-primary/10 hover:border-primary/30 ${className || ""}`}
-        >
           <CardHeader className="flex items-center justify-center pb-2 pt-4 px-4">
             <Badge variant="default">
               {statusDetail}
             </Badge>
           </CardHeader>
 
-          <CardContent className="flex flex-col flex-1 px-4 pb-2 gap-4">
+          <CardContent className={`flex flex-col flex-1 px-4 ${isCompleted ? "gap-2" : "pb-2 gap-4"}`}>
             {/* Teams Container - Home team on LEFT, Away team on RIGHT */}
             <div className="flex items-center justify-between gap-4">
               {/* Home Team (Left) */}
-              <div className="flex flex-col items-center gap-2 flex-1">
+              <div className={`flex flex-col items-center flex-1 ${isCompleted ? "gap-1" : "gap-2"}`}>
                 <div className="relative w-16 h-16">
                   <Image
                     src={homeTeam.logo}
@@ -83,7 +59,7 @@ export function GameCard({
                   {homeTeam.shortDisplayName}
                 </span>
                 {isCompleted && (
-                  <span className="text-2xl font-bold">{homeTeam.score ?? "-"}</span>
+                  <span className="text-xl font-bold">{homeTeam.score ?? "-"}</span>
                 )}
               </div>
 
@@ -115,7 +91,7 @@ export function GameCard({
               </div>
 
               {/* Away Team (Right) */}
-              <div className="flex flex-col items-center gap-2 flex-1">
+              <div className={`flex flex-col items-center flex-1 ${isCompleted ? "gap-1" : "gap-2"}`}>
                 <div className="relative w-16 h-16">
                   <Image
                     src={awayTeam.logo}
@@ -129,7 +105,7 @@ export function GameCard({
                   {awayTeam.shortDisplayName}
                 </span>
                 {isCompleted && (
-                  <span className="text-2xl font-bold">{awayTeam.score ?? "-"}</span>
+                  <span className="text-xl font-bold">{awayTeam.score ?? "-"}</span>
                 )}
               </div>
             </div>
@@ -141,8 +117,7 @@ export function GameCard({
               <span className="text-xs text-muted-foreground text-center">{venue}</span>
             </CardFooter>
           )}
-        </Card>
-      </motion.div>
+      </Card>
     </div>
   );
 }

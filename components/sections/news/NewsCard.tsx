@@ -4,19 +4,7 @@ import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-
-interface NewsArticle {
-  id: string;
-  headline: string;
-  description?: string;
-  images?: { url: string; alt?: string; width?: number; height?: number }[];
-  links?: { web?: { href: string } };
-}
-
-interface NewsCardProps {
-  article: NewsArticle;
-  className?: string;
-}
+import type { NewsCardProps } from "@/lib/utils";
 
 export function NewsCard({ article, className }: NewsCardProps) {
   const img = article.images?.[0];

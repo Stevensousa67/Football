@@ -1,81 +1,10 @@
 import { getGames } from "@/app/api/espn/games";
 import { GamesClient } from "./GamesClient";
-
-interface GamesProps {
-  tournament: string;
-}
-
-interface ESPNTeam {
-  id: string;
-  team: {
-    id: string;
-    displayName: string;
-    shortDisplayName: string;
-    abbreviation: string;
-    logo: string;
-  };
-  score?: string;
-}
-
-interface ESPNCompetition {
-  id: string;
-  date: string;
-  status: {
-    type: {
-      id: string;
-      name: string;
-      state: string;
-      completed: boolean;
-      description: string;
-      detail: string;
-      shortDetail: string;
-    };
-  };
-  competitors: ESPNTeam[];
-  venue?: {
-    fullName: string;
-    address?: {
-      city: string;
-      country: string;
-    };
-  };
-}
-
-interface ESPNEvent {
-  id: string;
-  name: string;
-  date: string;
-  competitions: ESPNCompetition[];
-}
-
-interface ParsedGame {
-  id: string;
-  homeTeam: {
-    id: string;
-    displayName: string;
-    shortDisplayName: string;
-    abbreviation: string;
-    logo: string;
-    score?: string;
-  };
-  awayTeam: {
-    id: string;
-    displayName: string;
-    shortDisplayName: string;
-    abbreviation: string;
-    logo: string;
-    score?: string;
-  };
-  statusDetail: string;
-  venue?: string;
-  date: string;
-  isCompleted: boolean;
-}
+import { type GamesProps, type ESPNEvent, type ParsedGame, DEFAULT_DAYS_BACK, DEFAULT_DAYS_FORWARD } from "@/lib/utils";
 
 function parseGames(events: ESPNEvent[]): ParsedGame[] {
   return events.map((event) => {
     const competition = event.competitions[0];
-    // Use direct indexing instead of find+indexOf for O(1) access
     const homeTeamData = competition.competitors[0];
     const awayTeamData = competition.competitors[1];
 
@@ -105,14 +34,15 @@ function parseGames(events: ESPNEvent[]): ParsedGame[] {
   });
 }
 
-// Default time window for fetching games
-const DEFAULT_DAYS_BACK = 7;
-const DEFAULT_DAYS_FORWARD = 7;
-
 export default async function Games({ tournament }: GamesProps) {
   // Fetch games from the last 7 days and upcoming 7 days for initial load
   const gamesData = await getGames(tournament, DEFAULT_DAYS_BACK, DEFAULT_DAYS_FORWARD);
   const initialGames = parseGames(gamesData.events || []);
 
-  return <GamesClient tournament={tournament} initialGames={initialGames} />;
+  return (
+    <section className="mt-20 flex flex-col items-center text-center gap-8 px-4">
+      <h1 className="text-3xl font-semibold">Games</h1>
+      <GamesClient tournament={tournament} initialGames={initialGames} />
+    </section>
+  );
 }

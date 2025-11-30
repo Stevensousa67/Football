@@ -1,42 +1,17 @@
 import Image from 'next/image';
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-
-// Define interfaces for the data structure
-interface Stat {
-  name: string;
-  value: string | number;
-}
-
-interface Team {
-  id: string;
-  displayName?: string;
-  name?: string;
-  logos?: { href: string }[];
-}
-
-interface Entry {
-  team: Team;
-  stats?: Stat[];
-}
-
-interface Standings {
-  entries: Entry[];
-}
-
-interface Data {
-  children?: { standings?: Standings }[];
-}
-
-interface StandingsTableProps {
-  data: Data;
-}
+import type {
+  StandingsTableProps,
+  StandingsEntry,
+  StandingsStat,
+} from "@/lib/utils";
 
 export function StandingsTable({ data }: StandingsTableProps) {
   const entries = data?.children?.[0]?.standings?.entries ?? [];
 
   // Memoize the get function to avoid redundant stat lookups
-  const getStat = (entry: Entry, name: string): number => {
-    const value = entry.stats?.find((stat) => stat.name === name)?.value ?? '-';
+  const getStat = (entry: StandingsEntry, name: string): number => {
+    const value = entry.stats?.find((stat: StandingsStat) => stat.name === name)?.value ?? '-';
     return value === '-' ? 0 : Number(value);
   };
 

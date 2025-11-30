@@ -1,10 +1,6 @@
 import { getStandings } from '@/app/api/espn/standings';
 import { StandingsTable } from './StandingsTable';
-
-interface StandingsProps {
-  tournament: string;
-  season: string;
-}
+import type { StandingsProps } from "@/lib/utils";
 
 export default async function Standings({ tournament, season }: StandingsProps) {
   const standingsData = await getStandings(tournament, season);

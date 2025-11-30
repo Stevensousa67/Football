@@ -2,18 +2,7 @@ import React from 'react';
 import { getNews } from '@/app/api/espn/news'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { NewsCard } from './NewsCard';
-
-interface NewsProps {
-  tournament: string;
-}
-
-interface ESPNArticle {
-  id: string;
-  headline: string;
-  description?: string;
-  images?: { url: string; alt?: string; width?: number; height?: number }[];
-  links?: { web?: { href: string } };
-}
+import type { NewsProps, ESPNArticle } from "@/lib/utils";
 
 export default async function News({ tournament }: NewsProps) {
   const newsData = await getNews(tournament);

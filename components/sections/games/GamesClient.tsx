@@ -2,9 +2,13 @@
 
 import * as React from "react";
 import { DateRange } from "react-day-picker";
-import { GameCard } from "./GameCard";
-import { DateRangePicker, getDefaultDateRange } from "./DateRangePicker";
+import { format, addDays } from "date-fns";
+import { Calendar as CalendarIcon } from "lucide-react";
 import { formatDateForAPI } from "@/app/api/espn/games";
+import { GameCard } from "./GameCard";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   Carousel,
   CarouselContent,
@@ -12,29 +16,14 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { cn, type GamesClientProps, type ParsedGame } from "@/lib/utils";
 
-interface Team {
-  id: string;
-  displayName: string;
-  shortDisplayName: string;
-  abbreviation: string;
-  logo: string;
-  score?: string;
-}
-
-interface ParsedGame {
-  id: string;
-  homeTeam: Team;
-  awayTeam: Team;
-  statusDetail: string;
-  venue?: string;
-  date: string;
-  isCompleted: boolean;
-}
-
-interface GamesClientProps {
-  tournament: string;
-  initialGames: ParsedGame[];
+function getDefaultDateRange(): DateRange {
+  const today = new Date();
+  return {
+    from: today,
+    to: addDays(today, 7),
+  };
 }
 
 function GamesCarousel({ games, title }: { games: ParsedGame[]; title: string }) {
@@ -50,7 +39,6 @@ function GamesCarousel({ games, title }: { games: ParsedGame[]; title: string })
     <div className="w-full">
       <h2 className="text-xl font-semibold text-center mb-4">{title}</h2>
       
-      {/* Carousel for all screen sizes - responsive columns */}
       <div className="w-full max-w-5xl mx-auto px-12">
         <Carousel opts={{ align: "start", loop: true }} className="w-full relative">
           <CarouselPrevious className="absolute -left-10 top-1/2 -translate-y-1/2 z-10" />
@@ -166,23 +154,52 @@ export function GamesClient({ tournament, initialGames }: GamesClientProps) {
   // Split into upcoming and past games
   const upcomingGames = games
     .filter((game) => !game.isCompleted)
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()); // Soonest first
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   
   const pastGames = games
     .filter((game) => game.isCompleted)
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()); // Most recent first
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   return (
-    <section className="mt-20 flex flex-col items-center text-center gap-8 px-4">
-      <h1 className="text-3xl font-semibold">Games</h1>
-      
-      {/* Date Range Picker */}
+    <>
+      {/* Date Range Picker using shadcn components */}
       <div className="flex flex-col items-center gap-2">
         <p className="text-sm text-muted-foreground">Select a date range to view games</p>
-        <DateRangePicker
-          dateRange={dateRange}
-          onDateRangeChange={handleDateRangeChange}
-        />
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              id="date"
+              variant={"outline"}
+              className={cn(
+                "w-[300px] justify-start text-left font-normal",
+                !dateRange && "text-muted-foreground"
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {dateRange?.from ? (
+                dateRange.to ? (
+                  <>
+                    {format(dateRange.from, "LLL dd, y")} -{" "}
+                    {format(dateRange.to, "LLL dd, y")}
+                  </>
+                ) : (
+                  format(dateRange.from, "LLL dd, y")
+                )
+              ) : (
+                <span>Pick a date range</span>
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="center">
+            <Calendar
+              mode="range"
+              defaultMonth={dateRange?.from}
+              selected={dateRange}
+              onSelect={handleDateRangeChange}
+              numberOfMonths={2}
+            />
+          </PopoverContent>
+        </Popover>
       </div>
       
       {isLoading ? (
@@ -195,6 +212,7 @@ export function GamesClient({ tournament, initialGames }: GamesClientProps) {
           <GamesCarousel games={pastGames} title="Past Games" />
         </div>
       )}
-    </section>
+    </>
   );
 }
+
