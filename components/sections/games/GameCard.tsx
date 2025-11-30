@@ -60,38 +60,37 @@ export function GameCard({
           className={`flex flex-col h-full p-0 transition-all duration-300 ease-in-out hover:shadow-xl hover:shadow-primary/10 hover:border-primary/30 ${className || ""}`}
         >
           <CardHeader className="flex items-center justify-center pb-2 pt-4 px-4">
-            <Badge variant={isCompleted ? "secondary" : "default"}>
+            <Badge variant="default">
               {statusDetail}
             </Badge>
           </CardHeader>
 
           <CardContent className="flex flex-col flex-1 px-4 pb-2 gap-4">
-            {/* Teams Container */}
+            {/* Teams Container - Home team on LEFT, Away team on RIGHT */}
             <div className="flex items-center justify-between gap-4">
-              {/* Away Team */}
+              {/* Home Team (Left) */}
               <div className="flex flex-col items-center gap-2 flex-1">
                 <div className="relative w-16 h-16">
                   <Image
-                    src={awayTeam.logo}
-                    alt={awayTeam.displayName}
+                    src={homeTeam.logo}
+                    alt={homeTeam.displayName}
                     fill
                     className="object-contain"
                     sizes="64px"
                   />
                 </div>
                 <span className="text-xs font-medium text-center line-clamp-2">
-                  {awayTeam.shortDisplayName}
+                  {homeTeam.shortDisplayName}
                 </span>
                 {isCompleted && (
-                  <span className="text-2xl font-bold">{awayTeam.score ?? "-"}</span>
+                  <span className="text-2xl font-bold">{homeTeam.score ?? "-"}</span>
                 )}
               </div>
 
-              {/* VS or Score Divider */}
+              {/* VS or Date Divider */}
               <div className="flex flex-col items-center gap-1">
                 {isCompleted ? (
                   <>
-                    <span className="text-sm text-muted-foreground font-medium">FT</span>
                     {date && (
                       <span className="text-xs text-muted-foreground text-center">
                         {formatGameDate(date)}
@@ -115,22 +114,22 @@ export function GameCard({
                 )}
               </div>
 
-              {/* Home Team */}
+              {/* Away Team (Right) */}
               <div className="flex flex-col items-center gap-2 flex-1">
                 <div className="relative w-16 h-16">
                   <Image
-                    src={homeTeam.logo}
-                    alt={homeTeam.displayName}
+                    src={awayTeam.logo}
+                    alt={awayTeam.displayName}
                     fill
                     className="object-contain"
                     sizes="64px"
                   />
                 </div>
                 <span className="text-xs font-medium text-center line-clamp-2">
-                  {homeTeam.shortDisplayName}
+                  {awayTeam.shortDisplayName}
                 </span>
                 {isCompleted && (
-                  <span className="text-2xl font-bold">{homeTeam.score ?? "-"}</span>
+                  <span className="text-2xl font-bold">{awayTeam.score ?? "-"}</span>
                 )}
               </div>
             </div>
