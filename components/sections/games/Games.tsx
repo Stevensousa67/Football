@@ -128,31 +128,14 @@ function GamesCarousel({ games, title, subtitle }: { games: ParsedGame[]; title:
         <p className="text-sm text-muted-foreground mb-4 text-center">{subtitle}</p>
       )}
       
-      {/* Grid layout for larger screens */}
-      <div className="hidden lg:grid lg:grid-cols-3 gap-6 justify-center items-stretch">
-        {games.slice(0, 3).map((game) => (
-          <div key={game.id} className="h-full">
-            <GameCard
-              homeTeam={game.homeTeam}
-              awayTeam={game.awayTeam}
-              statusDetail={game.statusDetail}
-              venue={game.venue}
-              date={game.date}
-              isCompleted={game.isCompleted}
-              className="border border-foreground/20 h-full"
-            />
-          </div>
-        ))}
-      </div>
-
-      {/* Carousel for smaller screens */}
-      <div className="w-full max-w-4xl mx-auto lg:hidden">
+      {/* Carousel for all screen sizes - responsive columns */}
+      <div className="w-full max-w-5xl mx-auto px-8">
         <Carousel opts={{ align: "start", loop: true }} className="w-full relative">
-          <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2 z-10 sm:-left-2 md:-left-4" />
-          <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 z-10 sm:-right-2 md:-right-4" />
+          <CarouselPrevious className="absolute -left-4 top-1/2 -translate-y-1/2 z-10" />
+          <CarouselNext className="absolute -right-4 top-1/2 -translate-y-1/2 z-10" />
           <CarouselContent className="-ml-2 md:-ml-4 pt-2">
             {games.map((game) => (
-              <CarouselItem key={game.id} className="pl-2 md:pl-4 basis-full md:basis-1/2">
+              <CarouselItem key={game.id} className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3">
                 <GameCard
                   homeTeam={game.homeTeam}
                   awayTeam={game.awayTeam}
@@ -160,7 +143,7 @@ function GamesCarousel({ games, title, subtitle }: { games: ParsedGame[]; title:
                   venue={game.venue}
                   date={game.date}
                   isCompleted={game.isCompleted}
-                  className="border border-foreground/20 mx-auto h-full"
+                  className="border border-foreground/20 h-full"
                 />
               </CarouselItem>
             ))}
@@ -171,9 +154,13 @@ function GamesCarousel({ games, title, subtitle }: { games: ParsedGame[]; title:
   );
 }
 
+// Default time window for fetching games
+const DEFAULT_DAYS_BACK = 7;
+const DEFAULT_DAYS_FORWARD = 7;
+
 export default async function Games({ tournament }: GamesProps) {
   // Fetch games from the last 7 days and upcoming 7 days
-  const gamesData = await getGames(tournament, 7, 7);
+  const gamesData = await getGames(tournament, DEFAULT_DAYS_BACK, DEFAULT_DAYS_FORWARD);
   const parsedGames = parseGames(gamesData.events || []);
 
   // Split into upcoming and past games
@@ -193,12 +180,12 @@ export default async function Games({ tournament }: GamesProps) {
         <GamesCarousel 
           games={upcomingGames} 
           title="Upcoming Games" 
-          subtitle="Next 7 days"
+          subtitle={`Next ${DEFAULT_DAYS_FORWARD} days`}
         />
         <GamesCarousel 
           games={pastGames} 
           title="Past Games" 
-          subtitle="Last 7 days"
+          subtitle={`Last ${DEFAULT_DAYS_BACK} days`}
         />
       </div>
     </section>

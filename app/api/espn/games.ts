@@ -1,3 +1,5 @@
+const MS_PER_DAY = 24 * 60 * 60 * 1000;
+
 function formatDate(date: Date): string {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -9,9 +11,8 @@ export async function getGames(tournament: string, daysBack: number = 7, daysFor
   const today = new Date();
   
   // Calculate date range using milliseconds for reliable date arithmetic
-  const msPerDay = 24 * 60 * 60 * 1000;
-  const startDate = new Date(today.getTime() - (daysBack * msPerDay));
-  const endDate = new Date(today.getTime() + (daysForward * msPerDay));
+  const startDate = new Date(today.getTime() - (daysBack * MS_PER_DAY));
+  const endDate = new Date(today.getTime() + (daysForward * MS_PER_DAY));
   
   const dateRange = `${formatDate(startDate)}-${formatDate(endDate)}`;
   
