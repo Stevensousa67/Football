@@ -2,10 +2,10 @@ import { createAuthClient } from "better-auth/react"; // make sure to import fro
 import { APIError } from "better-auth/api";
 
 export const authClient = createAuthClient({
-  baseURL: process.env.BETTER_BASE_URL || "http://localhost:3000",
+  baseURL: process.env.NEXT_PUBLIC_BETTER_BASE_URL || "http://localhost:3000",
 });
 
-console.log("Base URL:", process.env.BETTER_BASE_URL);
+console.log("Base URL:", process.env.NEXT_PUBLIC_BETTER_BASE_URL);
 
 export const loginWithSocial = async (provider: string) => {
   try {
