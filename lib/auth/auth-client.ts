@@ -5,8 +5,6 @@ export const authClient = createAuthClient({
   baseURL: process.env.NEXT_PUBLIC_BETTER_BASE_URL || "http://localhost:3000",
 });
 
-console.log("Base URL:", process.env.NEXT_PUBLIC_BETTER_BASE_URL);
-
 export const loginWithSocial = async (provider: string) => {
   try {
     await authClient.signIn.social({
