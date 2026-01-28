@@ -16,6 +16,8 @@ export const auth = betterAuth({
       phoneNumber: { type: "string" },
       gender: { type: "string" },
       accountStatus: { type: "string" },
+      preferredLeague: { type: "string" },
+      preferredTeam: { type: "string" },
     },
   },
   emailAndPassword: {

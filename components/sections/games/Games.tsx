@@ -1,6 +1,7 @@
 import { getGames } from "@/app/api/espn/games";
 import { GamesClient } from "./GamesClient";
 import { type GamesProps, type ESPNEvent, type ParsedGame, DEFAULT_DAYS_BACK, DEFAULT_DAYS_FORWARD } from "@/lib/utils";
+import ErrorDisplay from "@/components/ErrorDisplay";
 
 function parseGames(events: ESPNEvent[]): ParsedGame[] {
   return events.map((event) => {
@@ -35,14 +36,24 @@ function parseGames(events: ESPNEvent[]): ParsedGame[] {
 }
 
 export default async function Games({ tournament }: GamesProps) {
-  // Fetch games from the last 7 days and upcoming 7 days for initial load
-  const gamesData = await getGames(tournament, DEFAULT_DAYS_BACK, DEFAULT_DAYS_FORWARD);
-  const initialGames = parseGames(gamesData.events || []);
+  try {
+    // Fetch games from the last 7 days and upcoming 7 days for initial load
+    const gamesData = await getGames(tournament, DEFAULT_DAYS_BACK, DEFAULT_DAYS_FORWARD);
+    const initialGames = parseGames(gamesData.events || []);
 
-  return (
-    <section className="mt-20 flex flex-col items-center text-center gap-8 px-4">
-      <h1 className="text-3xl font-semibold">Games</h1>
-      <GamesClient tournament={tournament} initialGames={initialGames} />
-    </section>
-  );
+    return (
+      <section className="mt-20 flex flex-col items-center text-center gap-8 px-4">
+        <h1 className="text-3xl font-semibold">Games</h1>
+        <GamesClient tournament={tournament} initialGames={initialGames} />
+      </section>
+    );
+  } catch (error) {
+    console.error(`Failed to load games for ${tournament}:`, error);
+    return (
+      <section className="mt-20 flex flex-col items-center text-center gap-8 px-4">
+        <h1 className="text-3xl font-semibold">Games</h1>
+        <ErrorDisplay message="Failed to load games information. Please try again later." />
+      </section>
+    );
+  }
 }

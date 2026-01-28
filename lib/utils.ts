@@ -9,6 +9,7 @@ export function cn(...inputs: ClassValue[]) {
 // Constants
 // ============================================================================
 
+export const TOURNAMENTS = ['eng.1', 'fra.1', 'ita.1', 'ger.1', 'bra.1', 'esp.1'];
 export const DEFAULT_DAYS_BACK = 7;
 export const DEFAULT_DAYS_FORWARD = 7;
 
