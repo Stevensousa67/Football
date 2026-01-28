@@ -28,6 +28,8 @@ export async function signUp(prevState: State, formData: FormData) {
         phoneNumber: "",
         gender: "",
         accountStatus: "active",
+        preferredLeague: "",
+        preferredTeam: "",
       },
     });
   } catch (error) {
