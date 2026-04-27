@@ -46,3 +46,6 @@ Next.js 16 app router project using React 19, Tailwind CSS v4, and shadcn/ui.
 ***For any copy related requests:*** utilize the "marketing-skills@marketingskills" to write professional, non-generic, engaging, and psychologically triggering copies.
 ***Code Simplification:*** Upon every request, ALWAYS use the "code-simplifier@claude-plugins-official" skill to simplify the implementation. The objective is to adhere to absolute best practices across all technologies in the tech stack and enable scalability and performance.
 ***CLAUDE.md Updates:*** You can update the CLAUDE.md file as the codebase grows and scales so that future requests can better understand the architecture. Use the "claude-md-management@claude-plugins-official" skills to do so.
+
+**ESPN APIs**
+***Docs:*** app/api/espn/soccer.md. Every api call MUST be done server-side. Every ESPN api category must have it's own directory in api/espn/* and each category folder must have its own route.ts file where all the logic and exports live.
